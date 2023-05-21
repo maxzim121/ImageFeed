@@ -39,6 +39,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5A1D49AC2A1A2AEE00CABD41 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Profile;
+			sourceTree = "<group>";
+		};
 		5AA2D9F02A0B9CEC00C0CF0F /* ImagesList */ = {
 			isa = PBXGroup;
 			children = (
@@ -67,6 +74,7 @@
 		5AB83C2229FC24E700A10309 /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
+				5A1D49AC2A1A2AEE00CABD41 /* Profile */,
 				5AA2D9F02A0B9CEC00C0CF0F /* ImagesList */,
 				5AB83C2329FC24E700A10309 /* AppDelegate.swift */,
 				5AB83C2529FC24E700A10309 /* SceneDelegate.swift */,
