@@ -11,10 +11,28 @@ import UIKit
 final class ImagesListCell: UITableViewCell {
     static let reuseIdentifier = "ImagesListCell"
     
-    @IBOutlet var likeButton: UIButton!
-    @IBOutlet var imageShown: UIImageView!
-    @IBOutlet var dateLabel: UILabel!
+    private lazy var dateFormater: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
+    }()
     
+    @IBOutlet private var likeButton: UIButton!
+    @IBOutlet private var imageShown: UIImageView!
+    @IBOutlet private var dateLabel: UILabel!
+    
+    
+    public func cellSettings(imageNeeded: UIImage, indexPath: IndexPath) {
+        imageShown.image = imageNeeded
+        
+        if indexPath.row % 2 == 0 {
+            likeButton.imageView?.image = UIImage(named: "LikeDefault")
+        } else {
+            likeButton.imageView?.image = UIImage(named: "Like")
+        }
+        dateLabel.text = dateFormater.string(from: Date())
+    }
     
     
 }
