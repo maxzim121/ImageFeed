@@ -10,7 +10,7 @@ import UIKit
 class ImagesListViewController: UIViewController {
 
     
-    @IBOutlet private var tableView: UITableView!
+    @IBOutlet weak private var tableView: UITableView!
     
     private lazy var dateFormater: DateFormatter = {
         let formatter = DateFormatter()
@@ -27,21 +27,13 @@ class ImagesListViewController: UIViewController {
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 0, right: 0)
     }
     
+    
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         
         guard let imageNeeded = UIImage(named: "\(indexPath.row)") else {
             return
         }
-        cell.imageShown.image = imageNeeded
-        
-        if indexPath.row % 2 == 0 {
-            cell.likeButton.imageView?.image = UIImage(named: "LikeDefault")
-        } else {
-            cell.likeButton.imageView?.image = UIImage(named: "Like")
-
-        }
-        
-        cell.dateLabel.text = dateFormater.string(from: Date())
+        cell.cellSettings(imageNeeded: imageNeeded, indexPath: indexPath)
         
     }
 
