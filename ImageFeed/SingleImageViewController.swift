@@ -59,7 +59,14 @@ final class SingleImageViewController: UIViewController {
             let horizontalPadding =  max(0, (scrollView.contentSize.width - scrollView.bounds.width) / 2)
             scrollView.contentOffset = CGPoint(x: horizontalPadding, y: verticalPadding)
         }
-        
+
+}
+
+extension SingleImageViewController: UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        singleImageView
+    }
+    
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
             let imageViewSize = singleImageView.frame.size
             let scrollViewSize = scrollView.bounds.size
@@ -69,10 +76,4 @@ final class SingleImageViewController: UIViewController {
             
             scrollView.contentInset = UIEdgeInsets(top: verticalPadding, left: horizontalPadding, bottom: verticalPadding, right: horizontalPadding)
         }
-}
-
-extension SingleImageViewController: UIScrollViewDelegate {
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        singleImageView
-    }
 }
