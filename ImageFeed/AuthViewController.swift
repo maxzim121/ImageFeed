@@ -10,7 +10,6 @@ final class AuthViewController: UIViewController {
     
     weak var delegate: AuthViewControllerDelegate?
     
-    
     private let segueIdent = "ShowWebView"
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

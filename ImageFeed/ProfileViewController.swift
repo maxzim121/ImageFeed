@@ -1,5 +1,7 @@
 import Foundation
 import UIKit
+import Kingfisher
+import SwiftKeychainWrapper
 
 final class ProfileViewController: UIViewController {
     
@@ -9,6 +11,10 @@ final class ProfileViewController: UIViewController {
     private var userDiscript = UILabel()
     private var exitButton = UIButton()
     
+    private var profileService = ProfileService.shared
+    
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureProfilePic()
@@ -16,6 +22,37 @@ final class ProfileViewController: UIViewController {
         configureNickNameLabel()
         configureUserDiscript()
         configureExitButton()
+        updateProfileDetails(profile: profileService.profile)
+        
+        profileImageServiceObserver = NotificationCenter.default.addObserver(forName: ProfileImageService.DidChangeNotification,
+                                                                             object: nil,
+                                                                             queue: .main) { [weak self] _ in
+            guard let self = self else { return }
+            self.updateAvatar()
+        }
+        updateAvatar()
+    }
+    
+    private func updateAvatar() {
+        let processor = RoundCornerImageProcessor(cornerRadius: 90)
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)else { return }
+        profilePic.kf.setImage(with: url, options: [.processor(processor)]) { result in
+            switch result {
+            case .success(let value):
+                print(value.image)
+                print(value.source)
+            case .failure(let error):
+                print(error)
+                }
+            }
+        }
+    
+    private func updateProfileDetails(profile: Profile) {
+        self.nameLabel.text = profile.name
+        self.nickNameLabel.text = profile.loginName
+        self.userDiscript.text = profile.bio
     }
     
     private func configureProfilePic() {

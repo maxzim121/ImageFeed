@@ -1,13 +1,7 @@
-//
-//  File.swift
-//  ImageFeed
-//
-//  Created by Maksim Zimens on 21.07.2023.
-//
 
 import Foundation
 
-struct OAuthTokenResponseBody: Decodable {
+struct OAuthTokenResponseBody: Codable {
     var accessToken: String
     var tokenType: String
     var scope: String
