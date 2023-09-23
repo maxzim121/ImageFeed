@@ -47,7 +47,6 @@ final class ProfileService {
         task = urlSession.object(urlSession: urlSession, for: request) { [weak self] (result: Result<ProfileResult, Error>) in
             DispatchQueue.main.async {
                 guard let self = self else {return}
-                print("запрос на профиль прошёл")
                 switch result {
                 case .success(let body):
                     let username = body.username
@@ -60,7 +59,6 @@ final class ProfileService {
                                            bio: bio)
                     completion(.success(self.profile))
                 case .failure(let error):
-                    print("КАРТОШКА", error)
                     completion(.failure(error))
                 }
             }

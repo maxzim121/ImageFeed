@@ -22,6 +22,7 @@ final class ProfileImageService {
     static let shared = ProfileImageService()
     static let DidChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     
+    private var token = OAuth2TokenKeychainStorage()
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     
@@ -32,15 +33,15 @@ final class ProfileImageService {
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         
-        guard let token = KeychainWrapper.standard.string(forKey: "Auth token") else { return }
+        guard let bearerToken = token.getToken() else { return }
         
         var request = profileImageRequest(username: username)
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
+        
         
         task = urlSession.object(urlSession: urlSession, for: request) { [weak self] (result: Result<AllProfileImageResult, Error>) in
             DispatchQueue.main.async {
                 guard let self = self else {return}
-                print("получаем фотку")
                 switch result {
                 case .success(let body):
                     let allImages = body.allImages
@@ -49,7 +50,6 @@ final class ProfileImageService {
                         return
                     }
                     completion(.success(avatarURL))
-                    print(avatarURL)
                     NotificationCenter.default.post(name: ProfileImageService.DidChangeNotification,
                                                     object: self,
                                                     userInfo: ["URL": avatarURL])

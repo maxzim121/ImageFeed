@@ -11,13 +11,11 @@ import ProgressHUD
 
 final class UIBlockingProgressHUD {
     private static var window: UIWindow? {
-        print("вызвали")
         return UIApplication.shared.windows.first
     }
     
     static func show() {
         window?.isUserInteractionEnabled = false
-        print("показываем")
         ProgressHUD.show()
     }
     

@@ -10,6 +10,8 @@ final class OAuth2Service {
     private var task: URLSessionTask?
     private var lastCode: String?
     
+    private let authToken = OAuth2TokenKeychainStorage()
+    
     func fetchOAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
         
         assert(Thread.isMainThread)
@@ -35,10 +37,10 @@ final class OAuth2Service {
                 switch result {
                 case .success(let body):
                     let authToken = body.accessToken
-                    let isSuccess = KeychainWrapper.standard.set(authToken, forKey: "Auth token")
-                    guard isSuccess else {
-                        print("ОШИБКА СОХРАНЕНИЯ В keychain")
-                        return
+                    do { try self.authToken.storageToken(newToken: authToken)
+                    } catch {
+                        let errorStorage = KeychainError.errorStorageToken
+                        completion(.failure(errorStorage))
                     }
                     completion(.success(authToken))
                 case .failure(let error):

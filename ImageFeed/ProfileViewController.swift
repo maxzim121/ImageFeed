@@ -17,6 +17,7 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor(named: "YP Black")
         configureProfilePic()
         configureNameLabel()
         configureNickNameLabel()
@@ -41,10 +42,7 @@ final class ProfileViewController: UIViewController {
         profilePic.kf.setImage(with: url, options: [.processor(processor)]) { result in
             switch result {
             case .success(let value):
-                print(value.image)
-                print(value.source)
             case .failure(let error):
-                print(error)
                 }
             }
         }
