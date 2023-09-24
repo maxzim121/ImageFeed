@@ -1,5 +1,4 @@
 import Foundation
-import SwiftKeychainWrapper
 
 final class OAuth2Service {
     
@@ -19,10 +18,6 @@ final class OAuth2Service {
             if lastCode != code {
                 task?.cancel()
             } else {
-                return
-            }
-        } else {
-            if lastCode == code {
                 return
             }
         }
@@ -46,6 +41,7 @@ final class OAuth2Service {
                 case .failure(let error):
                     completion(.failure(error))
                 }
+                self.task = nil
             }
         }
     }

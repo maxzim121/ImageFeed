@@ -16,9 +16,11 @@ final class SplashScreenViewController: UIViewController {
     private let oauth2Service = OAuth2Service()
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+//        let _: () = keyChainStorage.removeSuccessful()
         if let token = keyChainStorage.getToken() {
             fetchProfile(token: token)
         } else {
@@ -73,7 +75,8 @@ extension SplashScreenViewController {
                 self.fetchProfile(token: token)
             case .failure:
                 UIBlockingProgressHUD.dismiss()
-                self.showNetworkErrorAlert(viewController: self)
+                print("gjgf")
+                self.showNetworkErrorAlert()
                 break
             }
         }
@@ -87,7 +90,8 @@ extension SplashScreenViewController {
                 self.profileImageService.fetchProfileImageURL(username: self.profileService.profile.username) { _ in }
                 self.switchToTabBarController()
             case .failure:
-                self.showNetworkErrorAlert(viewController: self)
+                print("пупупу")
+                self.showNetworkErrorAlert()
                 break
                 }
             UIBlockingProgressHUD.dismiss()
@@ -97,18 +101,19 @@ extension SplashScreenViewController {
 
 extension SplashScreenViewController {
     
-    private func showNetworkErrorAlert(viewController: UIViewController) {
+    private func showNetworkErrorAlert() {
+        let vc: UIViewController = self.presentedViewController ?? self
         let alert = UIAlertController(title: "Что-то пошло не так",
                                       message: "Не удалось войти в систему",
                                       preferredStyle: .alert)
         let action = UIAlertAction(title: "Ок", style: .default) { [weak self] _ in
             guard let self = self else {return}
-            self.performSegue(withIdentifier: self.showAuthenticationScreenSegueIdentifier, sender: nil)
-            viewController.present(alert, animated: false)
+            vc.dismiss(animated: true)
+            self.switchToAuthViewController()
         }
         
         alert.addAction(action)
-        viewController.present(alert, animated: true)
+        vc.present(alert, animated: true)
     }
     
 }

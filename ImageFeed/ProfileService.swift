@@ -4,8 +4,8 @@ import UIKit
 struct ProfileResult: Codable {
     var username: String
     var firstName: String
-    var lastName: String
-    var bio: String
+    var lastName: String?
+    var bio: String?
     
     enum CodingKeys: String, CodingKey {
         case username
@@ -17,9 +17,9 @@ struct ProfileResult: Codable {
 
 struct Profile{
     var username: String
-    var name: String
+    var name: String?
     var loginName: String
-    var bio: String
+    var bio: String?
 }
 
 final class ProfileService {
@@ -50,9 +50,9 @@ final class ProfileService {
                 switch result {
                 case .success(let body):
                     let username = body.username
-                    let name = "\(body.firstName) \(body.lastName)"
+                    let name = "\(body.firstName) \(body.lastName ?? "")"
                     let loginName = "@\(body.username)"
-                    let bio = body.bio
+                    let bio = body.bio ?? ""
                     self.profile = Profile(username: username,
                                            name: name,
                                            loginName: loginName,
@@ -61,6 +61,7 @@ final class ProfileService {
                 case .failure(let error):
                     completion(.failure(error))
                 }
+                self.task = nil
             }
         }
     }

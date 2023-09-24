@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 import Kingfisher
-import SwiftKeychainWrapper
 
 final class ProfileViewController: UIViewController {
     
@@ -25,7 +24,7 @@ final class ProfileViewController: UIViewController {
         configureExitButton()
         updateProfileDetails(profile: profileService.profile)
         
-        profileImageServiceObserver = NotificationCenter.default.addObserver(forName: ProfileImageService.DidChangeNotification,
+        profileImageServiceObserver = NotificationCenter.default.addObserver(forName: ProfileImageService.didChangeNotification,
                                                                              object: nil,
                                                                              queue: .main) { [weak self] _ in
             guard let self = self else { return }
@@ -42,7 +41,9 @@ final class ProfileViewController: UIViewController {
         profilePic.kf.setImage(with: url, options: [.processor(processor)]) { result in
             switch result {
             case .success(let value):
+                print(value)
             case .failure(let error):
+                print(error)
                 }
             }
         }

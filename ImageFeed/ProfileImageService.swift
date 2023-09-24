@@ -1,7 +1,6 @@
 
 import Foundation
 import UIKit
-import SwiftKeychainWrapper
 
 struct AllProfileImageResult: Codable {
     var allImages: ProfileImageResult
@@ -20,7 +19,7 @@ struct ProfileImageResult: Codable {
 final class ProfileImageService {
     
     static let shared = ProfileImageService()
-    static let DidChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
+    static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     
     private var token = OAuth2TokenKeychainStorage()
     private let urlSession = URLSession.shared
@@ -50,9 +49,9 @@ final class ProfileImageService {
                         return
                     }
                     completion(.success(avatarURL))
-                    NotificationCenter.default.post(name: ProfileImageService.DidChangeNotification,
+                    NotificationCenter.default.post(name: ProfileImageService.didChangeNotification,
                                                     object: self,
-                                                    userInfo: ["URL": avatarURL])
+                                                    userInfo: ["listPhoto": avatarURL])
                 case .failure(let error):
                     completion(.failure(error))
                 }

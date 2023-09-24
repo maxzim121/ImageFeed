@@ -40,9 +40,10 @@ final class WebViewViewController: UIViewController {
         
         let request = URLRequest(url: url)
         webView.load(request)
+
         
         webView.navigationDelegate = self
-        
+
         estimatedProgressObservation = webView.observe(
                     \.estimatedProgress,
                     options: [],
@@ -50,7 +51,9 @@ final class WebViewViewController: UIViewController {
                         guard let self = self else { return }
                         self.updateProgress()
                     })
+
         updateProgress()
+
     }
     
     private func updateProgress() {
@@ -66,6 +69,7 @@ extension WebViewViewController: WKNavigationDelegate {
                  decidePolicyFor navigationAction: WKNavigationAction,
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let code = code(from: navigationAction) {
+
             delegate?.webViewViewController(self, didAuthenticateWithCode: code)
             decisionHandler(.cancel)
         } else {
