@@ -1,24 +1,33 @@
-//
-//  File.swift
-//  ImageFeed
-//
-//  Created by Maksim Zimens on 21.07.2023.
-//
-
 import Foundation
+import SwiftKeychainWrapper
 
-final class OAuth2TokenStorage {
-    private let bearerToken = ""
+enum KeychainError: Error {
+    case errorStorageToken
+}
+
+final class OAuth2TokenKeychainStorage {
+    private enum Key: String {
+        case token
+    }
+    private let keychain = KeychainWrapper.standard
     
-    
-    private let userDefaults = UserDefaults.standard
-    
-    var token: String? {
+    private var token: String? {
         get {
-            userDefaults.string(forKey: bearerToken)
+            keychain.string(forKey: Key.token.rawValue)
         }
-        set {
-            userDefaults.set(newValue, forKey: bearerToken)
-        }
+    }
+    
+    func getToken() -> String? {
+        token
+    }
+    
+    func storageToken(newToken: String?) throws {
+        guard let newToken = newToken else { return }
+        let isSucces = keychain.set(newToken, forKey: Key.token.rawValue)
+        guard isSucces else { throw KeychainError.errorStorageToken }
+    }
+    
+    func removeSuccessful() {
+        keychain.removeObject(forKey: Key.token.rawValue)
     }
 }
