@@ -5,7 +5,7 @@ struct PhotosResult: Codable {
     let createdAt: String
     let width: Int
     let height: Int
-    let description: String
+    let description: String?
     let likedByUser: Bool
     let urls: UrlsResult
 
@@ -41,6 +41,7 @@ final class ImageListService {
     private let dateFormatter = FormatDate.shared
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
+    private let oAuthKeyChain = OAuth2TokenKeychainStorage()
 
     static let DidChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
 
@@ -51,23 +52,28 @@ final class ImageListService {
     func fetchPhotosNextPage() {
 
         assert(Thread.isMainThread)
-        if task == nil {return}
+        guard let token = oAuthKeyChain.getToken() else {return}
+        if task != nil {return}
 
         let page = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
                 lastLoadedPage = page
 
         var request = imagesListRequest(page: String(page))
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        print(request.url)
 
         task = urlSession.object(urlSession: urlSession, for: request) { [weak self] (result: Result<[PhotosResult], Error>) in
             DispatchQueue.main.async {
                 guard let self = self else {return}
                 switch result {
                 case .success(let body):
+                    print("проходит")
                     body.forEach { photo in
                         let photo = Photo(id: photo.id,
                                           size: CGSize(width: photo.width, height: photo.height),
                                           createdAt: self.dateFormatter.setupModelDate(createAt: photo.createdAt),
-                                          welcomeDescription: photo.description,
+                                          welcomeDescription: photo.description ?? "",
                                           thumbImageURL: photo.urls.thumb,
                                           largeImageURL: photo.urls.full,
                                           isLiked: photo.likedByUser)
@@ -76,7 +82,9 @@ final class ImageListService {
                     NotificationCenter.default.post(name: ImageListService.DidChangeNotification,
                                                     object: self,
                                                     userInfo: ["URL": self.photos])
+                    print(self.photos.count)
                 case .failure(let error):
+                    print("не проходит")
                     print(error)
                 }
             }
