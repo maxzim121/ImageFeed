@@ -20,7 +20,6 @@ final class SplashScreenViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-//        let _: () = keyChainStorage.removeSuccessful()
         if let token = keyChainStorage.getToken() {
             fetchProfile(token: token)
         } else {
