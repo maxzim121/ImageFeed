@@ -5,6 +5,8 @@ final class ImagesListViewController: UIViewController {
     
     @IBOutlet weak private var tableView: UITableView!
     
+    private let imageListService = ImageListService()
+    
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
     
     private lazy var dateFormater: DateFormatter = {
@@ -79,3 +81,10 @@ extension ImagesListViewController: UITableViewDataSource {
     }
 }
 
+extension ImagesListViewController {
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if (indexPath.row + 1) == imageListService.photos.count { imageListService.fetchPhotosNextPage() }
+    }
+    
+}
