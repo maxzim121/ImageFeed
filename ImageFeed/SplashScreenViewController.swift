@@ -19,10 +19,12 @@ final class SplashScreenViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        UIBlockingProgressHUD.show()
         if let token = keyChainStorage.getToken() {
             fetchProfile(token: token)
+            UIBlockingProgressHUD.dismiss()
         } else {
+            UIBlockingProgressHUD.dismiss()
             switchToAuthViewController()
         }
     }
@@ -119,7 +121,7 @@ extension SplashScreenViewController {
     
     private func configureSplashScreen() {
         logoView.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(named: "YP Black")
+        view.backgroundColor = .ypBlack
         view.addSubview(logoView)
         logoView.image = UIImage(named: "Logo")
         NSLayoutConstraint.activate([
