@@ -74,7 +74,6 @@ extension SplashScreenViewController {
                 self.fetchProfile(token: token)
             case .failure:
                 UIBlockingProgressHUD.dismiss()
-                print("gjgf")
                 self.showNetworkErrorAlert()
                 break
             }
@@ -89,7 +88,6 @@ extension SplashScreenViewController {
                 self.profileImageService.fetchProfileImageURL(username: self.profileService.profile.username) { _ in }
                 self.switchToTabBarController()
             case .failure:
-                print("пупупу")
                 self.showNetworkErrorAlert()
                 break
                 }
