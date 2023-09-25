@@ -1,7 +1,15 @@
 import Foundation
 import UIKit
+import Kingfisher
+
+protocol ImageListCellDelegate: AnyObject {
+    func imageListCellDidTapLike(_ cell: ImagesListCell)
+}
 
 final class ImagesListCell: UITableViewCell {
+    
+    weak var delegate: ImageListCellDelegate?
+    
     static let reuseIdentifier = "ImagesListCell"
     
     private lazy var dateFormater: DateFormatter = {
@@ -11,21 +19,27 @@ final class ImagesListCell: UITableViewCell {
         return formatter
     }()
     
-    @IBOutlet private var likeButton: UIButton!
-    @IBOutlet private var imageShown: UIImageView!
-    @IBOutlet private var dateLabel: UILabel!
+    @IBOutlet var likeButton: UIButton!
+    @IBOutlet var imageShown: UIImageView!
+    @IBOutlet var dateLabel: UILabel!
     
     
-    public func cellSettings(imageNeeded: UIImage, indexPath: IndexPath) {
-        imageShown.image = imageNeeded
-        
-        if indexPath.row % 2 == 0 {
-            likeButton.imageView?.image = UIImage(named: "LikeDefault")
-        } else {
-            likeButton.imageView?.image = UIImage(named: "Like")
-        }
-        dateLabel.text = dateFormater.string(from: Date())
+    @IBAction func likeButtonClicked(_ sender: Any) {
+        print("TAP")
+        delegate?.imageListCellDidTapLike(self)
     }
     
+    override func prepareForReuse() {
+            super.prepareForReuse()
+            imageShown.kf.cancelDownloadTask()
+        }
     
+    
+    public func setIsLiked(isLiked: Bool) {
+        if isLiked {
+            likeButton.imageView?.image = UIImage(named: "Like")
+        } else {
+            likeButton.imageView?.image = UIImage(named: "LikeDefault")
+        }
+    }
 }

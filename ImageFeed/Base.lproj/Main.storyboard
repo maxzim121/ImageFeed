@@ -43,7 +43,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="244"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="y5U-bJ-GYK">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="y5U-bJ-GYK">
                                                     <rect key="frame" x="16" y="4" width="382" height="236"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
@@ -62,6 +62,9 @@
                                                     <rect key="frame" x="354" y="4" width="44" height="44"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" image="LikeDefault"/>
+                                                    <connections>
+                                                        <action selector="likeButtonClicked:" destination="SH3-9y-Upl" eventType="touchUpInside" id="d4C-oW-SuB"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" name="YP Black"/>
@@ -310,6 +313,7 @@
         <image name="UnsplashLogo" width="60" height="60"/>
         <image name="eclipseBlack" width="50" height="50"/>
         <image name="nav_back_button" width="24" height="24"/>
+        <image name="placeholder" width="83" height="75"/>
         <image name="sharingButton" width="30" height="30"/>
         <image name="tab_editorial_active" width="30" height="30"/>
         <namedColor name="YP Black">

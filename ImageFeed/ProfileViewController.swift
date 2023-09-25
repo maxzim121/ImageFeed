@@ -11,6 +11,8 @@ final class ProfileViewController: UIViewController {
     private var exitButton = UIButton()
     
     private var profileService = ProfileService.shared
+    private var tokenStorage = OAuth2TokenKeychainStorage()
+    private var splashScreen = SplashScreenViewController()
     
     private var profileImageServiceObserver: NSObjectProtocol?
     
@@ -124,6 +126,34 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func exitButtonDidTap() {
+        exitAlert()
     }
     
+}
+
+extension ProfileViewController {
+    
+    private func exitAlert() {
+        let alertViewController = UIAlertController(title: "Пока, пока!",
+                                                    message: "Уверены что хотите выйти?", preferredStyle: .alert)
+        let actionNet = UIAlertAction(title: "Нет", style: .default) { _ in
+            alertViewController.dismiss(animated: true)
+        }
+        let actionDa = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            guard let self = self else {return}
+            self.exitAccount()
+        }
+        alertViewController.addAction(actionDa)
+        alertViewController.addAction(actionNet)
+        present(alertViewController, animated: true)
+    }
+    
+    private func exitAccount() {
+        clean()
+        tokenStorage.removeSuccessful()
+        print("Удаляем")
+        guard let window = UIApplication.shared.windows.first else { return }
+        let splashScreenViewController = SplashScreenViewController()
+        window.rootViewController = splashScreenViewController
+    }
 }
