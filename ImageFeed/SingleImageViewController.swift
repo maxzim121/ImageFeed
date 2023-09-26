@@ -17,10 +17,9 @@ final class SingleImageViewController: UIViewController {
     
     
     @IBAction func didTapSharingButton(_ sender: Any) {
-        guard let image = singleImageView.image else {return}
-        let sharingViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-        
-        self.present(sharingViewController, animated: true, completion: nil)
+        guard let imageShare = singleImageView.image else { return }
+        let share = UIActivityViewController(activityItems: [imageShare], applicationActivities: nil)
+        present(share, animated: true)
     }
     
     @IBOutlet var singleImageView: UIImageView!
@@ -75,7 +74,6 @@ extension SingleImageViewController: UIScrollViewDelegate {
 
 extension SingleImageViewController {
     func setImage(urlString: String) {
-        print("начали функцию")
         singleImageView.image = image
         UIBlockingProgressHUD.show()
         guard let url = URL(string: urlString) else {
@@ -89,9 +87,8 @@ extension SingleImageViewController {
             case .success(let resultImage):
                 self.image = resultImage.image
                 self.rescaleAndCenterImageInScrollView(image: resultImage.image)
-            case .failure(let error):
+            case .failure(_):
                 self.showAllert(urlString: urlString)
-                print(error)
             }
         }
     }

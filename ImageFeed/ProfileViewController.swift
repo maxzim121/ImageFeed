@@ -151,7 +151,6 @@ extension ProfileViewController {
     private func exitAccount() {
         clean()
         tokenStorage.removeSuccessful()
-        print("Удаляем")
         guard let window = UIApplication.shared.windows.first else { return }
         let splashScreenViewController = SplashScreenViewController()
         window.rootViewController = splashScreenViewController

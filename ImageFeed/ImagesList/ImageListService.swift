@@ -51,9 +51,9 @@ final class ImageListService {
     static let DidChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     static let shared = ImageListService()
 
-    private (set) var photos: [Photo] = []
+    var photos: [Photo] = []
 
-    private var lastLoadedPage: Int?
+    var lastLoadedPage: Int?
 
     func fetchPhotosNextPage() {
 
@@ -82,7 +82,6 @@ final class ImageListService {
                                           isLiked: photo.likedByUser)
                         self.photos.append(photo)
                     }
-                    print(self.photos.count)
                     NotificationCenter.default.post(name: ImageListService.DidChangeNotification,
                                                     object: self,
                                                     userInfo: ["photos": self.photos])
@@ -112,18 +111,14 @@ extension ImageListService {
         assert(Thread.isMainThread)
         
         if likeTask != nil {return}
-        var method = isLike ? "delete" : "post"
-        print(method)
+        let method = isLike ? "delete" : "post"
         var request = likeChangeRequest(method: method, photoId: photoId)
         guard let bearerToken = tokenStorage.getToken() else { return }
         request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         
         likeTask = urlSession.object(urlSession: urlSession, for: request) { [weak self] (result: Result<OnePhoto, Error>) in
-            print("работаем")
             DispatchQueue.main.async {
-                print("работаем2")
                 guard let self = self else {return}
-                print("работаем3")
                 switch result {
                 case .success(let body):
                     let newPhoto = Photo(id: body.photo.id,
@@ -134,12 +129,10 @@ extension ImageListService {
                                       largeImageURL: body.photo.urls.full,
                                       isLiked: body.photo.likedByUser)
                     if let index = self.photos.firstIndex(where: {$0.id == photoId}) {
-                            print(newPhoto)
                             self.photos[index] = newPhoto
                     }
                     completion(.success(newPhoto))
                 case .failure(let error):
-                    print(error)
                     completion(.failure(error))
                 }
                 self.likeTask = nil

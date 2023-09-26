@@ -19,7 +19,8 @@ final class ImagesListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(photos)
+        imageListService.lastLoadedPage = nil
+        imageListService.photos = []
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -37,7 +38,6 @@ final class ImagesListViewController: UIViewController {
             guard let self = self else { return }
             UIBlockingProgressHUD.dismiss()
             self.updateTableViewAnimated()
-            print("update0")
         }
         UIBlockingProgressHUD.dismiss()
         self.updateTableViewAnimated()
@@ -48,7 +48,6 @@ final class ImagesListViewController: UIViewController {
             let viewController = segue.destination as! SingleImageViewController
             let indexPath = sender as! IndexPath
             viewController.urlString = photos[indexPath.row].largeImageURL
-            print("вызвали функцию")
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -81,10 +80,6 @@ extension ImagesListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         imageListCell.delegate = self
-        
-        //TODO:
-        //Внести в отдельные константы дату и лайк, написать функцию в ImageListCell
-        //Также в SimgleImageView прописать функцию картинки
         let urlString = photos[indexPath.row].thumbImageURL
         guard let url = URL(string: urlString) else { return imageListCell}
         imageListCell.imageShown.kf.indicatorType = .activity
@@ -109,24 +104,17 @@ extension ImagesListViewController {
 
 private extension ImagesListViewController {
     func updateTableViewAnimated() {
-        print("update1")
         let oldCount = photos.count
         let newCount = imageListService.photos.count
         photos = imageListService.photos
-        print("update2")
-        print(oldCount)
-        print(newCount)
         if oldCount != newCount {
-            print("update5")
             tableView.performBatchUpdates {
                 let indexPaths = (oldCount..<newCount).map { i in
                     IndexPath(row: i, section: 0)
                 }
-                print(indexPaths)
                 tableView.insertRows(at: indexPaths, with: .automatic)
             } completion: { _ in }
         }
-        print("update3")
     }
     
     func cellHeightCalculator(imageSize: CGSize, tableView: UITableView) -> CGFloat {
@@ -152,11 +140,14 @@ extension ImagesListViewController: ImageListCellDelegate {
                 self.photos = self.imageListService.photos
                 cell.setIsLiked(isLiked: self.photos[indexPath.row].isLiked)
                 UIBlockingProgressHUD.dismiss()
-            case .failure(let error):
+            case .failure(_):
                 UIBlockingProgressHUD.dismiss()
-                print(error)
-                //Показать ошибку с UIAlertController
+                let alert = UIAlertController(title: "Ошибка", message: "Ну удалось установить лайк!", preferredStyle: .alert)
+                let action = UIAlertAction(title: "OK", style: .default)
+                alert.addAction(action)
+                self.present(alert, animated: true)
             }
         }
     }
 }
+
