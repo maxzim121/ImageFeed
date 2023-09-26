@@ -5,8 +5,7 @@ final class FormatDate {
 
     private lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .none
+        dateFormatter.dateFormat = "dd MMMM yyyy"
         dateFormatter.locale = Locale(identifier: "ru_RU")
         return dateFormatter
     }()

@@ -19,7 +19,7 @@ final class ImagesListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageListService.lastLoadedPage = nil
+        imageListService.lastLoadedPage = 0
         imageListService.photos = []
         
         tableView.dataSource = self
@@ -31,7 +31,7 @@ final class ImagesListViewController: UIViewController {
         
         UIBlockingProgressHUD.show()
                 
-        imageListServiceObserver = NotificationCenter.default.addObserver(forName:ImageListService.DidChangeNotification,
+        imageListServiceObserver = NotificationCenter.default.addObserver(forName:ImageListService.didChangeNotification,
                                                                           object: nil,
                                                                           queue: .main) { [weak self] _ in
             
@@ -40,7 +40,7 @@ final class ImagesListViewController: UIViewController {
             self.updateTableViewAnimated()
         }
         UIBlockingProgressHUD.dismiss()
-        self.updateTableViewAnimated()
+        updateTableViewAnimated()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

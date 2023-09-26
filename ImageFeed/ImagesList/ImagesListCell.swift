@@ -25,7 +25,6 @@ final class ImagesListCell: UITableViewCell {
     
     
     @IBAction func likeButtonClicked(_ sender: Any) {
-        print("TAP")
         delegate?.imageListCellDidTapLike(self)
     }
     

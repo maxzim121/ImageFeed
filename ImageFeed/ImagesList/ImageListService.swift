@@ -41,6 +41,9 @@ struct Photo {
 }
 
 final class ImageListService {
+    
+    var photos: [Photo] = []
+    var lastLoadedPage = 0
 
     private let dateFormatter = FormatDate.shared
     private let urlSession = URLSession.shared
@@ -48,12 +51,8 @@ final class ImageListService {
     private var likeTask: URLSessionTask?
     private let tokenStorage = OAuth2TokenKeychainStorage()
 
-    static let DidChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
+    static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     static let shared = ImageListService()
-
-    var photos: [Photo] = []
-
-    var lastLoadedPage: Int?
 
     func fetchPhotosNextPage() {
 
@@ -61,7 +60,7 @@ final class ImageListService {
         if photosTask != nil {return}
         guard let bearerToken = tokenStorage.getToken() else { return }
 
-        let page = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
+        let page = lastLoadedPage + 1
                 lastLoadedPage = page
 
         var request = imagesListRequest(page: String(page))
@@ -82,7 +81,7 @@ final class ImageListService {
                                           isLiked: photo.likedByUser)
                         self.photos.append(photo)
                     }
-                    NotificationCenter.default.post(name: ImageListService.DidChangeNotification,
+                    NotificationCenter.default.post(name: ImageListService.didChangeNotification,
                                                     object: self,
                                                     userInfo: ["photos": self.photos])
                 case .failure(let error):

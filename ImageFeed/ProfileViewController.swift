@@ -10,6 +10,7 @@ final class ProfileViewController: UIViewController {
     private var userDiscript = UILabel()
     private var exitButton = UIButton()
     
+    private var exitAccountService = ExitAccountService.shared
     private var profileService = ProfileService.shared
     private var tokenStorage = OAuth2TokenKeychainStorage()
     private var splashScreen = SplashScreenViewController()
@@ -149,7 +150,7 @@ extension ProfileViewController {
     }
     
     private func exitAccount() {
-        clean()
+        exitAccountService.clean()
         tokenStorage.removeSuccessful()
         guard let window = UIApplication.shared.windows.first else { return }
         let splashScreenViewController = SplashScreenViewController()

@@ -5,7 +5,8 @@ import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     
-    
+    var image: UIImage?
+    var urlString = ""
     
     @IBOutlet var sharingButton: UIButton!
     
@@ -23,9 +24,6 @@ final class SingleImageViewController: UIViewController {
     }
     
     @IBOutlet var singleImageView: UIImageView!
-    
-    var image: UIImage?
-    var urlString = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -95,16 +93,16 @@ extension SingleImageViewController {
     
     func showAllert(urlString: String) {
         let alertViewController = UIAlertController(title: nil, message: "Что-то пошло не так. Попробовать ещё раз?", preferredStyle: .alert)
-        let action1 = UIAlertAction(title: "Не надо", style: .default) { [weak self] _ in
+        let actionCancel = UIAlertAction(title: "Не надо", style: .default) { [weak self] _ in
             guard let self = self else {return}
             self.dismiss(animated: true, completion: nil)
         }
-        let action2 = UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+        let actionRepeat = UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
             guard let self = self else {return}
             self.setImage(urlString: urlString)
         }
-        alertViewController.addAction(action1)
-        alertViewController.addAction(action2)
+        alertViewController.addAction(actionCancel)
+        alertViewController.addAction(actionRepeat)
         present(alertViewController, animated: true)
     }
 }
