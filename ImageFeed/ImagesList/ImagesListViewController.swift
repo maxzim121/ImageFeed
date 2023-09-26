@@ -83,14 +83,9 @@ extension ImagesListViewController: UITableViewDataSource {
         let urlString = photos[indexPath.row].thumbImageURL
         guard let url = URL(string: urlString) else { return imageListCell}
         imageListCell.imageShown.kf.indicatorType = .activity
-        imageListCell.imageShown.kf.setImage(with: url,placeholder: UIImage(named: "placeholder")) { [weak self] result in
+        imageListCell.imageShown.kf.setImage(with: url,placeholder: UIImage(named: "placeholder")) { [weak self] _ in
             guard let self = self else {return}
-            switch result {
-            case .success(_):
-                self.tableView.reloadRows(at: [indexPath], with: .automatic)
-            case .failure(let error):
-                print(error)
-            }
+            self.tableView.reloadRows(at: [indexPath], with: .automatic)
         }
         
         imageListCell.dateLabel.text = dateFormater.setupUIDateString(date: photos[indexPath.row].createdAt)
