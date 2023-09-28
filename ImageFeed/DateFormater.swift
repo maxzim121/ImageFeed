@@ -17,11 +17,11 @@ final class FormatDate {
     }()
 
     func setupModelDate(createAt: String?) -> Date? {
-        iSO8601DateFormatter.date(from: createAt ?? emptyLine)
+        iSO8601DateFormatter.date(from: createAt ?? "")
     }
 
     func setupUIDateString(date: Date?) -> String? {
-        guard let date = date else { return emptyLine }
+        guard let date = date else { return "" }
         return dateFormatter.string(from: date)
     }
 }

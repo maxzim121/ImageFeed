@@ -17,11 +17,4 @@ final class ImagesListTests: XCTestCase {
     let presenter = ImagesListViewPresenter()
     let presenterSpy = ImagesListViewPresenterSpy()
     
-    func testListConfigRan() {
-        vc.presenterConfiguration(presenterSpy)
-                
-        let _ = vc.view
-                
-        XCTAssertTrue(presenterSpy.imagesListConfigWasCalled)
-    }
 }

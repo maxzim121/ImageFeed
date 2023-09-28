@@ -64,7 +64,6 @@ final class ImagesListViewPresenter: ImagesListViewPresenterProtocol{
     }
 
     func getLargeURL(from indexPath: IndexPath) -> String{
-        print("ВЫЗВАЛИ",photos[indexPath.row].largeImageURL)
         return photos[indexPath.row].largeImageURL
         }
     

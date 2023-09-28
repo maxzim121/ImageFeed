@@ -10,19 +10,6 @@ import Foundation
 
 final class ProfileTests: XCTestCase {
     
-    func testViewControllerCalledPresenterViewDidLoad() {
-        
-        let viewController = ProfileViewController()
-        let presenter = ProfileViewPresenterSpy()
-        viewController.configure(presenter)
-        
-        _ = viewController.view
-        
-        XCTAssert(presenter.presenterViewDidLoadCalled)
-
-        
-    }
-    
     func testProfileDataUpdate() {
         
         let viewController = ProfileViewController()

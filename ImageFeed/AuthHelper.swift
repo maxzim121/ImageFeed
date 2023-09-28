@@ -13,18 +13,20 @@ protocol AuthHelperProtocol {
 }
 
 class AuthHelper: AuthHelperProtocol {
+    private let constaints = AuthConfiguration.standard
+    
     func authRequest() -> URLRequest {
         
         let request = URLRequest(url: authURL())
         return request
     }
     func authURL() -> URL {
-        var urlComponents = URLComponents(string: UnsplashAuthorizeURLString)!
+        var urlComponents = URLComponents(string: constaints.authURLString)!
         urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: AccessKey),
-            URLQueryItem(name: "redirect_uri", value: RedirectURI),
+            URLQueryItem(name: "client_id", value: constaints.accessKey),
+            URLQueryItem(name: "redirect_uri", value: constaints.redirectURI),
             URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: AccessScope)
+            URLQueryItem(name: "scope", value: constaints.accessScope)
         ]
         return urlComponents.url!
     }

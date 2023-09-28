@@ -57,7 +57,6 @@ final class ProfileService {
                                            name: name,
                                            loginName: loginName,
                                            bio: bio)
-                    print(self.profile)
                     completion(.success(self.profile))
                 case .failure(let error):
                     completion(.failure(error))

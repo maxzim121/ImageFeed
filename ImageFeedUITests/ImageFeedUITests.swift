@@ -5,6 +5,7 @@
 //  Created by Maksim Zimens on 28.09.2023.
 //
 import XCTest
+import WebKit
 
 final class ImageFeedUITests: XCTestCase {
 
@@ -16,7 +17,18 @@ final class ImageFeedUITests: XCTestCase {
         app.launch()
     }
     
+    func clean() {
+       HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+       WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+          records.forEach { record in
+             WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+          }
+       }
+    }
+    
+    
     func testAuth() throws {
+        clean()
         app/*@START_MENU_TOKEN@*/.staticTexts["Войти"]/*[[".buttons[\"Войти\"].staticTexts[\"Войти\"]",".staticTexts[\"Войти\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
         let webView = app.webViews["UnsplashWebView"]
         webView.waitForExistence(timeout: 25)
@@ -80,5 +92,7 @@ final class ImageFeedUITests: XCTestCase {
             
         app.buttons["ipad.and.arrow"].tap()
         app.alerts["Пока, пока!"].scrollViews.otherElements.buttons["Да"].tap()
+        sleep(5)
+        XCTAssertTrue(app/*@START_MENU_TOKEN@*/.staticTexts["Войти"]/*[[".buttons[\"Войти\"].staticTexts[\"Войти\"]",".staticTexts[\"Войти\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.exists)
     }
 }

@@ -24,7 +24,8 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter = ProfileViewPresenter()
-        presenter?.view = self
+        weak var presenterView = self
+        presenter?.view = presenterView
         configureWholeScreen()
         observer()
         presenter?.viewDidLoad()
@@ -131,7 +132,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     }
     
     private func configureWholeScreen() {
-        view.backgroundColor = UIColor(named: "YP Black")
+        view.backgroundColor = .ypBlack
         configureProfilePic()
         configureNameLabel()
         configureNickNameLabel()

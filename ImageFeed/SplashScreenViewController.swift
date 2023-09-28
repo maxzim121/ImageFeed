@@ -22,7 +22,6 @@ final class SplashScreenViewController: UIViewController {
         UIBlockingProgressHUD.show()
         if let token = keyChainStorage.getToken() {
             fetchProfile(token: token)
-            print("ok1")
             UIBlockingProgressHUD.dismiss()
         } else {
             UIBlockingProgressHUD.dismiss()
@@ -75,7 +74,6 @@ extension SplashScreenViewController {
             switch result {
             case .success(let token):
                 self.fetchProfile(token: token)
-                print("ok3")
             case .failure:
                 UIBlockingProgressHUD.dismiss()
                 self.showNetworkErrorAlert()
@@ -85,7 +83,6 @@ extension SplashScreenViewController {
     }
     
     private func fetchProfile(token: String) {
-        print("ok4")
         profileService.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
             switch result {

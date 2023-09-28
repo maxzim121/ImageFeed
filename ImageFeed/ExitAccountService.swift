@@ -9,7 +9,7 @@ import Foundation
 import SwiftKeychainWrapper
 import WebKit
 
-final class ExitAccountService {
+class ExitAccountService {
     
     static let shared = ExitAccountService()
     

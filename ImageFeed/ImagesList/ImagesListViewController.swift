@@ -24,7 +24,8 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter = ImagesListViewPresenter()
-        presenter?.view = self
+        weak var presenterView = self
+        presenter?.view = presenterView
         presenter?.reloadImageList()
         presenter?.imagesListConfig()
     }
