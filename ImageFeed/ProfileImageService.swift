@@ -45,6 +45,7 @@ final class ProfileImageService {
                 case .success(let body):
                     let allImages = body.allImages
                     self.avatarURL = allImages.small
+                    print(self.avatarURL)
                     guard let avatarURL = self.avatarURL else {
                         return
                     }

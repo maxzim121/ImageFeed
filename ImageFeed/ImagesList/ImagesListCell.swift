@@ -6,7 +6,7 @@ protocol ImageListCellDelegate: AnyObject {
     func imageListCellDidTapLike(_ cell: ImagesListCell)
 }
 
-final class ImagesListCell: UITableViewCell {
+public class ImagesListCell: UITableViewCell {
     
     weak var delegate: ImageListCellDelegate?
     
@@ -28,7 +28,7 @@ final class ImagesListCell: UITableViewCell {
         delegate?.imageListCellDidTapLike(self)
     }
     
-    override func prepareForReuse() {
+    public override func prepareForReuse() {
             super.prepareForReuse()
             imageShown.kf.cancelDownloadTask()
         }
@@ -41,4 +41,5 @@ final class ImagesListCell: UITableViewCell {
             likeButton.imageView?.image = UIImage(named: "LikeDefault")
         }
     }
+    
 }

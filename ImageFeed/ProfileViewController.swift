@@ -2,45 +2,36 @@ import Foundation
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+public protocol ProfileViewControllerProtocol {
+    var presenter: ProfileViewPresenterProtocol? {get set}
+    func updateAvatar(from url: URL)
+    func observer()
+    func updateProfile(name: String, loginName: String, bio: String)
+}
+
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
     
-    private var profilePic = UIImageView()
-    private var nameLabel = UILabel()
-    private var nickNameLabel = UILabel()
-    private var userDiscript = UILabel()
-    private var exitButton = UIButton()
+    var presenter: ProfileViewPresenterProtocol?
     
-    private var exitAccountService = ExitAccountService.shared
-    private var profileService = ProfileService.shared
-    private var tokenStorage = OAuth2TokenKeychainStorage()
-    private var splashScreen = SplashScreenViewController()
+    var profilePic = UIImageView()
+    var nameLabel = UILabel()
+    var nickNameLabel = UILabel()
+    var userDiscript = UILabel()
+    var exitButton = UIButton()
     
     private var profileImageServiceObserver: NSObjectProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(named: "YP Black")
-        configureProfilePic()
-        configureNameLabel()
-        configureNickNameLabel()
-        configureUserDiscript()
-        configureExitButton()
-        updateProfileDetails(profile: profileService.profile)
-        
-        profileImageServiceObserver = NotificationCenter.default.addObserver(forName: ProfileImageService.didChangeNotification,
-                                                                             object: nil,
-                                                                             queue: .main) { [weak self] _ in
-            guard let self = self else { return }
-            self.updateAvatar()
-        }
-        updateAvatar()
+        presenter = ProfileViewPresenter()
+        presenter?.view = self
+        configureWholeScreen()
+        observer()
+        presenter?.viewDidLoad()
     }
     
-    private func updateAvatar() {
+    func updateAvatar(from url: URL) {
         let processor = RoundCornerImageProcessor(cornerRadius: 90)
-        guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)else { return }
         profilePic.kf.setImage(with: url, options: [.processor(processor)]) { result in
             switch result {
             case .success(let value):
@@ -51,11 +42,25 @@ final class ProfileViewController: UIViewController {
             }
         }
     
-    private func updateProfileDetails(profile: Profile) {
-        self.nameLabel.text = profile.name
-        self.nickNameLabel.text = profile.loginName
-        self.userDiscript.text = profile.bio
+    func observer() {
+        profileImageServiceObserver = NotificationCenter.default.addObserver(forName: ProfileImageService.didChangeNotification,
+                                                                             object: nil,
+                                                                             queue: .main) { [weak self] _ in
+            guard let self = self else { return }
+            self.presenter?.setUpProfilePic()
+        }
     }
+    
+    func updateProfile(name: String, loginName: String, bio: String) {
+        self.nameLabel.text = name
+        self.nickNameLabel.text = loginName
+        self.userDiscript.text = bio
+    }
+    
+    func configure(_ presenter: ProfileViewPresenterProtocol) {
+            self.presenter = presenter
+            self.presenter?.view = self
+        }
     
     private func configureProfilePic() {
         profilePic.translatesAutoresizingMaskIntoConstraints = false
@@ -125,35 +130,19 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
+    private func configureWholeScreen() {
+        view.backgroundColor = UIColor(named: "YP Black")
+        configureProfilePic()
+        configureNameLabel()
+        configureNickNameLabel()
+        configureUserDiscript()
+        configureExitButton()
+    }
+    
     @objc
     private func exitButtonDidTap() {
-        exitAlert()
+        guard let alert = presenter?.showAlert() else {return}
+        present(alert, animated: true)
     }
     
-}
-
-extension ProfileViewController {
-    
-    private func exitAlert() {
-        let alertViewController = UIAlertController(title: "Пока, пока!",
-                                                    message: "Уверены что хотите выйти?", preferredStyle: .alert)
-        let actionNet = UIAlertAction(title: "Нет", style: .default) { _ in
-            alertViewController.dismiss(animated: true)
-        }
-        let actionDa = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
-            guard let self = self else {return}
-            self.exitAccount()
-        }
-        alertViewController.addAction(actionDa)
-        alertViewController.addAction(actionNet)
-        present(alertViewController, animated: true)
-    }
-    
-    private func exitAccount() {
-        exitAccountService.clean()
-        tokenStorage.removeSuccessful()
-        guard let window = UIApplication.shared.windows.first else { return }
-        let splashScreenViewController = SplashScreenViewController()
-        window.rootViewController = splashScreenViewController
-    }
 }
