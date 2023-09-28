@@ -27,12 +27,12 @@ final class ImageFeedUITests: XCTestCase {
         
         loginTextField.tap()
         sleep(1)
-        loginTextField.typeText("zimensm12@gmail.com")
+        loginTextField.typeText("")
         app.children(matching: .window).firstMatch.tap()
         sleep(1)
         passwordTextField.tap()
         sleep(1)
-        passwordTextField.typeText("12563478As")
+        passwordTextField.typeText("")
         sleep(1)
         webViewsQuery/*@START_MENU_TOKEN@*/.buttons["Login"]/*[[".otherElements[\"Connect ImageFeed + Unsplash | Unsplash\"].buttons[\"Login\"]",".buttons[\"Login\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
         
