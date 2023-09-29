@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Kingfisher
 
-public protocol ProfileViewControllerProtocol {
+public protocol ProfileViewControllerProtocol: AnyObject {
     var presenter: ProfileViewPresenterProtocol? {get set}
     func updateAvatar(from url: URL)
     func observer()
@@ -24,8 +24,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter = ProfileViewPresenter()
-        weak var presenterView = self
-        presenter?.view = presenterView
+        presenter?.view = self
         configureWholeScreen()
         observer()
         presenter?.viewDidLoad()

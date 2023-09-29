@@ -49,5 +49,5 @@ final class WebViewPresenter: WebViewPresenterProtocol {
 
     }
     
-    var view: WebViewViewControllerProtocol?
+    weak var view: WebViewViewControllerProtocol?
 }

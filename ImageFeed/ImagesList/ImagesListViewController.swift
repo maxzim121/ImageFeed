@@ -1,7 +1,7 @@
 import UIKit
 import Kingfisher
 
-public protocol ImagesListViewControllerProtocol {
+public protocol ImagesListViewControllerProtocol: AnyObject {
     var presenter: ImagesListViewPresenterProtocol? {get set}
     func updateTableViewAnimated(oldCount: Int, newCount: Int)
     func addingObserver()
@@ -24,8 +24,7 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter = ImagesListViewPresenter()
-        weak var presenterView = self
-        presenter?.view = presenterView
+        presenter?.view = self
         presenter?.reloadImageList()
         presenter?.imagesListConfig()
     }

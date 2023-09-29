@@ -23,7 +23,7 @@ public protocol ProfileViewPresenterProtocol {
 
 final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     
-    var view: ProfileViewControllerProtocol?
+    weak var view: ProfileViewControllerProtocol?
     private var tokenStorage = OAuth2TokenKeychainStorage()
     
     func viewDidLoad() {
